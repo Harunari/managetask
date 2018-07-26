@@ -1,4 +1,6 @@
 ﻿"use strict";
+// フォームの数をカウントする変数
+// 初期のフォームの数は１つ
 let countTask = 1;
 
 window.onload = () => {
@@ -92,7 +94,7 @@ function RemoveTaskForm() {
 }
 function AddTaskToDB() {
     let json;
-    // TODO: ライブラリ使うべき　https://kishiken.com/bootstrap/validator.html
+    // TODO: バリデーションはライブラリ使うべき　https://kishiken.com/bootstrap/validator.html
     if ($('#password').val() === "") {
         $('#passAlert').css("color", "red");
         $('#passAlert').text("パスワードを入力してください");
@@ -100,22 +102,31 @@ function AddTaskToDB() {
         json = {
             title: $('#title').val(),
             password: $('#password').val(),
+            numberOftask: countTask,
             task1: $('#task1').val()
         };
 
-        // モーダルのフォームを初期化
+        // モーダルのフォーム数、フォームを初期化
         $('#passAlert').text("");
         $('#title').val('');
         $('#password').val('');
         $('#task1').val('');
         
-        // オブジェクトにtask2以降のフォームの中身を追加し初期化
+        // オブジェクトにtask2以降のフォームの中身を追加
         let addedTask = document.getElementById("addedTask");
-        for (let i = 0; i < countTask - 1; i++) {
-            let item = addedTask.childNodes[i].childNodes[1];
+        for (let i = 2; i <= countTask; i++) {
+            let item = addedTask.childNodes[i - 2].childNodes[1];
             json[item.id] = item.value;
-            item.value = "";
         }
+
+        // 追加されたフォームを全削除
+        for (let i = 2; i <= countTask; i++) {
+            let targetElement = document.getElementById(i);
+            addedTask.removeChild(targetElement);
+        }
+
+        // カウント変数初期化
+        countTask = 1;
         
         // モーダルを消す
         $('#registerNew').modal('hide');
@@ -132,9 +143,8 @@ function AddTaskToDB() {
         dataType: "json",
         cache: false,
         timeout: 5000,
-        success: OnSuccess,
         error: (xhr, ajaxOptions, thrownError) => {
-            FailedGetJson("通信に失敗しました");
+            alert("通信に失敗しました");
         }
     });
 

@@ -150,6 +150,7 @@
   <ItemGroup>
     <Content Include="About.aspx" />
     <Content Include="API\GetJsonString.aspx" />
+    <Content Include="API\SetJsonString.aspx" />
     <Content Include="App_Data\Database1.mdf" />
     <Content Include="App_Data\Database1_log.ldf">
       <DependentUpon>Database1.mdf</DependentUpon>
@@ -250,6 +251,13 @@
     </Compile>
     <Compile Include="API\GetJsonString.aspx.designer.cs">
       <DependentUpon>GetJsonString.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="API\SetJsonString.aspx.cs">
+      <DependentUpon>SetJsonString.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="API\SetJsonString.aspx.designer.cs">
+      <DependentUpon>SetJsonString.aspx</DependentUpon>
     </Compile>
     <Compile Include="Content\App_Start\BundleConfig.cs" />
     <Compile Include="About.aspx.cs">
