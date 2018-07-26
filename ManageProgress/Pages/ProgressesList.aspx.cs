@@ -9,7 +9,9 @@ namespace ManageProgress.Pages
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            // TODO:Login機能が実装されたら消す
+            Session["LoginId"] = "admin";
+            loginId.InnerText = (string)Session["LoginId"];
         }
 
     }

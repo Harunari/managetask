@@ -13,6 +13,7 @@
 
 <body>
     <form id="form1" runat="server">
+        <div id="loginId" runat="server"></div>
         <div class="jumbotron">
             <h1 class="display-4">進捗一覧</h1>
             <p class="lead">
@@ -67,7 +68,7 @@
             </div>
         </div>
 
-        <div id="result">
+        <div id="result" class="container">
         </div>
     </form>
 

@@ -19,7 +19,7 @@ namespace ManageProgress.Models
         public DateTime DateTimeRegistered { get; set; }
 
         [JsonProperty(PropertyName = "numberOfItems")]
-        public int NumberOfItems { get; set; }
+        public int NumberOfTask { get; set; }
 
         [JsonIgnore]
         [JsonProperty(PropertyName = "password")]
