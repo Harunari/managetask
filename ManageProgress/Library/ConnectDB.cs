@@ -10,7 +10,6 @@ namespace ManageProgress.Library
     public class ConnectDB
     {
         private string _connectString;
-
         public ConnectDB(string dbName)
         {
             _connectString = ConfigurationManager.ConnectionStrings[dbName].ConnectionString;
@@ -43,7 +42,105 @@ namespace ManageProgress.Library
         }
         // TODO: GETProgress(loginId) ログイン中のユーザの進捗のみを表示するメソッドを作る
 
+        public bool IsCorrectPassword(ParticipantModel participant, string inputPassword)
+        {
+            using (var conn = new SqlConnection(_connectString))
+            using (var cmd = conn.CreateCommand())
+            {
+                try
+                {
+                    conn.Open();
+                    cmd.CommandText = @"
+SELECT 
+    Password
+FROM 
+    Progresses
+WHERE
+    Id = @Id;";
+                    cmd.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int)).Value = participant.ProgressId;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            if ((string)reader["Password"] == inputPassword)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+                catch
+                {
+                    throw;
+                }
+            }
+        }
+        public bool ExistSameName(ParticipantModel participant)
+        {
+            using (var conn = new SqlConnection(_connectString))
+            using (var cmd = conn.CreateCommand())
+            {
+                try
+                {
+                    conn.Open();
+                    cmd.CommandText = @"
+SELECT
+    *
+FROM 
+    Participants 
+WHERE 
+    ParticipantName = @ParticipantName
+AND 
+    ProgressId = @ProgressId;";
+                    cmd.Parameters.Add(new SqlParameter("@ParticipantName", SqlDbType.NVarChar, 50)).Value = participant.ParticipantName;
+                    cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = participant.ProgressId;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                catch (Exception)
+                {
 
+                    throw;
+                }
+
+            }
+        }
+        public void RegisterParticipant(ParticipantModel participant)
+        {
+            using (var conn = new SqlConnection(_connectString))
+            using (var cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                try
+                {
+                    cmd.CommandText = @"
+INSERT 
+INTO 
+Participants
+VALUES
+    (@ProgressId, 
+    @ParticipantName, 
+    @CurrentProgress);";
+
+                    cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = participant.ProgressId;
+                    cmd.Parameters.Add(new SqlParameter("@ParticipantName", SqlDbType.NVarChar, 50)).Value = participant.ParticipantName;
+                    cmd.Parameters.Add(new SqlParameter("@CurrentProgress", SqlDbType.Int)).Value = participant.CurrentProgress;
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+                    throw;
+                }
+
+            }
+        }
         public bool SetProgress(ProgressModel progress, List<TaskModel> tasks)
         {
             using (var conn = new SqlConnection(_connectString))
@@ -66,7 +163,6 @@ VALUES
     @DateTime_Registered,
     @Number_Of_Items, 
     @Password);";
-
                         cmd.Parameters.Add(new SqlParameter("@UserId", SqlDbType.NVarChar, 50)).Value = progress.UserId;
                         cmd.Parameters.Add(new SqlParameter("@Title", SqlDbType.NVarChar, 50)).Value = progress.Title;
                         cmd.Parameters.Add(new SqlParameter("@DateTime_Registered", SqlDbType.DateTime)).Value = progress.DateTimeRegistered;
@@ -83,7 +179,6 @@ INTO Tasks
 VALUES
     (@ProgressId,
     @Task)";
-
                             cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = newId;
                             cmd.Parameters.Add(new SqlParameter("@Task", SqlDbType.NVarChar)).Value = task.Task;
                             cmd.ExecuteNonQuery();
@@ -99,36 +194,35 @@ VALUES
                 }
             }
         }
-
-            public bool SetTasks(int progressId, List<TaskModel> tasks)
+        public bool SetTasks(int progressId, List<TaskModel> tasks)
+        {
+            using (var conn = new SqlConnection(_connectString))
+            using (var cmd = conn.CreateCommand())
             {
-                using (var conn = new SqlConnection(_connectString))
-                using (var cmd = conn.CreateCommand())
+                conn.Open();
+                try
                 {
-                    conn.Open();
-                    try
+                    foreach (var task in tasks)
                     {
-                        foreach (var task in tasks)
-                        {
-                            cmd.Parameters.Clear();
-                            cmd.CommandText = @"
+                        cmd.Parameters.Clear();
+                        cmd.CommandText = @"
 INSERT
 INTO Tasks
 VALUES
     (@ProgressId,
     @Task)";
 
-                            cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = progressId;
-                            cmd.Parameters.Add(new SqlParameter("@Task", SqlDbType.Int)).Value = task.Task;
-                            cmd.ExecuteNonQuery();
-                        }
-                        return true;
+                        cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = progressId;
+                        cmd.Parameters.Add(new SqlParameter("@Task", SqlDbType.Int)).Value = task.Task;
+                        cmd.ExecuteNonQuery();
                     }
-                    catch
-                    {
-                        return false;
-                    }
+                    return true;
+                }
+                catch
+                {
+                    return false;
                 }
             }
         }
     }
+}

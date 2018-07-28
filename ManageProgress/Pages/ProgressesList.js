@@ -23,6 +23,13 @@ window.onload = () => {
             FailedGetJson("通信に失敗しました");
         }
     });
+
+    $('#result').on('click', 'table>tbody', e => {
+        let progressId = e.target.parentNode.id;
+        window.location.href = "ManageProgress.aspx?progressId=" + progressId;
+    });
+    
+
 };
 
 function OnSuccess(response) {
@@ -48,14 +55,14 @@ function CreateTable(progresses) {
         "<tbody>";
     for (let i = 0; i < progresses.length; i++) {
         tag += "" +
-            "<tr>" +
+            "<tr id=" + progresses[i].id + ">" +
             "<td>" + progresses[i].title + "</td>" +
             "<td>" + progresses[i].dateTimeRegistered + "</td>" +
             "<td>" + progresses[i].numberOfItems + "</td>" +
             "</tr>";
     }
     tag += "" +
-        "<tbody>" +
+        "</tbody>" +
         "</table>";
 
     let resultTag = document.getElementById("result");

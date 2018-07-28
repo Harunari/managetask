@@ -169,6 +169,8 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Pages\ManageProgress.aspx" />
+    <Content Include="Pages\ManageProgress.js" />
     <Content Include="Pages\ProgressesList.js" />
     <Content Include="Register.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -287,6 +289,13 @@
     </Compile>
     <Compile Include="Library\ConnectDB.cs" />
     <Compile Include="Models\TableModels.cs" />
+    <Compile Include="Pages\ManageProgress.aspx.cs">
+      <DependentUpon>ManageProgress.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\ManageProgress.aspx.designer.cs">
+      <DependentUpon>ManageProgress.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ProgressesList.aspx.cs">
       <DependentUpon>ProgressesList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

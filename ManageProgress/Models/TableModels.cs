@@ -5,7 +5,6 @@ namespace ManageProgress.Models
 {
     public class ProgressModel
     {
-        [JsonIgnore]
         [JsonProperty(PropertyName ="id")]
         public int Id { get; set; }
 
@@ -37,5 +36,13 @@ namespace ManageProgress.Models
 
         [JsonProperty(PropertyName = "task")]
         public string Task { get; set; }
+    }
+
+    public class ParticipantModel
+    {
+        public int Id { get; set; }
+        public int ProgressId { get; set; }
+        public string ParticipantName { get; set; }
+        public int CurrentProgress { get; set; }
     }
 }
