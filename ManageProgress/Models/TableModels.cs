@@ -40,9 +40,17 @@ namespace ManageProgress.Models
 
     public class ParticipantModel
     {
+        [JsonIgnore]
+        [JsonProperty(PropertyName ="id")]
         public int Id { get; set; }
+
+        [JsonProperty(PropertyName = "progressId")]
         public int ProgressId { get; set; }
+
+        [JsonProperty(PropertyName = "participantName")]
         public string ParticipantName { get; set; }
+
+        [JsonProperty(PropertyName = "currentProgress")]
         public int CurrentProgress { get; set; }
     }
 }

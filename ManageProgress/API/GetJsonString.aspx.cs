@@ -1,6 +1,7 @@
 ﻿using ManageProgress.Library;
 using Newtonsoft.Json;
 using System.Web.Services;
+using System;
 
 namespace ManageProgress.API
 {
@@ -22,10 +23,44 @@ namespace ManageProgress.API
                 string json = JsonConvert.SerializeObject(result, Formatting.Indented);
                 return json;
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 return "error";
                 
+            }
+        }
+        [WebMethod]
+        public static string GetParticipants(string strProgressId)
+        {
+            var cdb = new ConnectDB("Database1");
+            try
+            {
+                int progressId = int.Parse(strProgressId);
+                var result = cdb.GetParticipants(progressId);
+                string json = JsonConvert.SerializeObject(result, Formatting.Indented);
+                return json;
+            }
+            catch (Exception)
+            {
+
+                return "error";
+            }
+        }
+        [WebMethod]
+        public static string GetTasks(string strProgressId)
+        {
+            var cdb = new ConnectDB("Database1");
+            try
+            {
+                int progressId = int.Parse(strProgressId);
+                var result = cdb.GetTasks(progressId);
+                string json = JsonConvert.SerializeObject(result, Formatting.Indented);
+                return json;
+            }
+            catch (Exception)
+            {
+
+                return "error";
             }
         }
     }

@@ -15,43 +15,10 @@
     <form id="form1" runat="server">
         <div>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#join">
-                新規作成
+                参加
             </button>
         </div>
-        <div>
-            <div class="d-table" id="taskTable">
-                <div class="d-table-row">
-                    <p class="d-table-cell p-2 bg-dark text-white"></p>
-                    <p class="d-table-cell p-2 bg-dark text-white">大崎</p>
-                    <p class="d-table-cell p-2 bg-dark text-white">亀井</p>
-                    <div class="d-table-cell p-2 bg-dark text-white" runat="server">松村</div>
-                </div>
-                <div class="d-table-row">
-                    <p class="d-table-cell p-2 bg-primary text-white">うんこする</p>
-                    <p class="d-table-cell p-2  text-white" style="background-color: gray;"></p>
-                    <p class="d-table-cell p-2 bg-primary text-white">d-table</p>
-                    <p class="d-table-cell p-2 bg-primary text-white">d-table</p>
-                </div>
-                <div class="d-table-row">
-                    <p class="d-table-cell p-2 bg-primary text-white">御飯食べる</p>
-                    <p class="d-table-cell p-2 bg-primary text-white">d-table</p>
-                    <p class="d-table-cell p-2 bg-primary text-white">d-table</p>
-                    <p class="d-table-cell p-2 bg-primary text-white">d-table</p>
-                </div>
-                <div class="d-table-row">
-                    <p class="d-table-cell p-2 bg-primary text-white">d-table</p>
-                    <p class="d-table-cell p-2 bg-primary text-white">d-table</p>
-                    <p class="d-table-cell p-2 bg-primary text-white">d-table</p>
-                    <p class="d-table-cell p-2 bg-primary text-white">d-table</p>
-                </div>
-                <div class="d-table-row">
-                    <p class="d-table-cell p-2 bg-primary text-white">d-table</p>
-                    <p class="d-table-cell p-2 bg-primary text-white">d-table</p>
-                    <p class="d-table-cell p-2 bg-primary text-white">d-table</p>
-                    <p class="d-table-cell p-2 bg-primary text-white">d-table</p>
-                </div>
-            </div>
-        </div>
+        <div id="tb"></div>
 
         <div class="modal fade" id="join" tabindex="-1" role="dialog" aria-labelledby="#joinTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">

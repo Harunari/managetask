@@ -1,12 +1,92 @@
 ﻿"use strict";
-let param, json;
+let param, json, participants, tasks;
 window.onload = () => {
     let urlParam = location.search.substring(1);
     if (urlParam) {
         param = urlParam.split('=');
     }
-}
+    AjaxCommunication();
 
+};
+function AjaxCommunication() {
+    let data = JSON.stringify({ strProgressId: param[1] });
+    $.ajax({
+        type: "POST",
+        url: "../API/GetJsonString.aspx/GetParticipants",
+        data: data,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        cache: false,
+        success: OnSuccessGetParticipants,
+        error: (xhr, ajaxOptions, thrownError) => {
+            alert("通信に失敗しました");
+        }
+    });
+    $.ajax({
+        type: "POST",
+        url: "../API/GetJsonString.aspx/GetTasks",
+        data: data,
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        cache: false,
+        success: OnSuccessGetTasks,
+        error: (xhr, ajaxOptions, thrownError) => {
+            alert("通信に失敗しました");
+        }
+    });
+}
+function CreateTable(members, tks) {
+    let tag;
+    tag = "" +
+        "<div class='d-table' id='taskTable'>" +
+        "<div class='d-table-row'>" +
+        "<p class='d-table-cell p-2 bg-dark text-white'>" +
+        "タスク名" +
+        "</p>";
+    for (let i = 0; i < members.length; i++) {
+        tag += "<p class='d-table-cell p-2 bg-dark text-white'>" +
+            members[i].participantName +
+            "</p>";
+    }
+    tag += "</div>";
+
+    for (let i = 1; i <= tks.length; i++) {
+        tag += "" +
+            "<div class='d-table-row'>" +
+            "<p class='d-table-cell p-2 bg-dark text-white'>" +
+            i + "." +
+            tks[i - 1].task +
+            "</p>";
+        for (let j = 0; j < members.length; j++) {
+            // tks[i].taskのタスクが終わっているかどうか
+            if (members[j].currentProgress >= i) {
+                tag += "<p class='d-table-cell p-2 bg-primary text-white'>済み</p>";
+            } else {
+                tag += "<p class='d-table-cell p-2  text-white' style='background-color: gray;'></p>";
+            }
+        }
+        tag += "</div>";
+    }
+    tag += "</div>";
+    let resultTag = document.getElementById("tb");
+    resultTag.innerHTML = tag;
+}
+function OnSuccessGetParticipants(response) {
+    if (response.d === "error") {
+        alert("サーバでエラーが発生しました");
+    }
+    participants = JSON.parse(response.d);
+}
+function OnSuccessGetTasks(response) {
+    if (response.d === "error") {
+        alert("サーバでエラーが発生しました");
+    }
+    tasks = JSON.parse(response.d);
+    CreateTable(participants, tasks);
+    $('#join').modal('hide');
+}
 function addParticipantDataToDb() {
     // バリデーション
     let password = $('#password').val();
@@ -14,7 +94,7 @@ function addParticipantDataToDb() {
     if (name === "") {
         $('#nameAlert').css('color', 'red');
         $('#nameAlert').text('名前が入力されていません');
-        
+
     } else {
         $('#nameAlert').text('');
     }
@@ -31,7 +111,7 @@ function addParticipantDataToDb() {
     json = {
         progressId: param[1],
         name: name,
-        password: password,
+        password: password
     };
 
     console.log(json);
@@ -48,13 +128,11 @@ function addParticipantDataToDb() {
         success: OnSuccessRegister,
         error: (xhr, ajaxOptions, thrownError) => {
             alert("通信に失敗しました");
-            alert(xhr.status);
-            alert(thrownError);
-            alert(xhr.responseText);
         }
     });
 }
 function OnSuccessRegister(responce) {
+    console.log("aaa");
     if (responce.d === "wrongPassword") {
         $('#passAlert').css('color', 'red');
         $('#passAlert').text('パスワードが異なります');
@@ -66,7 +144,7 @@ function OnSuccessRegister(responce) {
     if (responce.d === "registeredSuccess") {
         $('#passAlert').text('');
         $('#nameAlert').text('');
-        $('#join').modal('hide');
+        AjaxCommunication();
     }
     if (responce.d === "error") {
         alert("エラーが発生しました");

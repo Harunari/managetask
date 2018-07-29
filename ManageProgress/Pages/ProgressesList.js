@@ -5,31 +5,11 @@ let countTask = 1;
 
 window.onload = () => {
     countTask = 1;
-    let data = {
-        userId: "admin",
-    };
-
-    $.ajax({
-        type: "POST",
-        url: "../API/GetJsonString.aspx/GetRegisteredProgresses",
-        data: JSON.stringify(data),
-        async: true,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        cache: false,
-        timeout: 5000,
-        success: OnSuccess,
-        error: (xhr, ajaxOptions, thrownError) => {
-            FailedGetJson("通信に失敗しました");
-        }
-    });
-
+    GetTable();
     $('#result').on('click', 'table>tbody', e => {
         let progressId = e.target.parentNode.id;
         window.location.href = "ManageProgress.aspx?progressId=" + progressId;
     });
-    
-
 };
 
 function OnSuccess(response) {
@@ -83,7 +63,8 @@ function AddTaskForm() {
     divElement.setAttribute('id', countTask);
 
     tag = "" +
-        "<label>タスク" + countTask + "</label>" +
+        "<div class='alert1' id='task" + countTask + "Alert'></div>"+
+        "<label>タスク" + countTask + "(10文字以内)</label>" +
         "<input type='text' id='task" + countTask + "' class='form-control' />";
 
     divElement.innerHTML = tag;
@@ -102,9 +83,24 @@ function RemoveTaskForm() {
 function AddTaskToDB() {
     let json;
     // TODO: バリデーションはライブラリ使うべき　https://kishiken.com/bootstrap/validator.html
+    if ($('#title').val() === "") {
+        $('#titleAlert').text("タイトルを入力してください");
+        return;
+    } else if ($('#title').val().length  > 10) {
+        $('#titleAlert').text("10文字以内で入力してください");
+        return;
+    }
+    if ($('#task1').val() === "") {
+        $('#task1Alert').text("入力してください");
+        return;
+    } else if ($('#task1').val().length > 10) {
+        $('#task1Alert').text("10文字以内で入力してください");
+        return;
+    }
+    
     if ($('#password').val() === "") {
-        $('#passAlert').css("color", "red");
         $('#passAlert').text("パスワードを入力してください");
+        return;
     } else {
         json = {
             userId: $('#loginId').text(),
@@ -114,16 +110,19 @@ function AddTaskToDB() {
             task1: $('#task1').val()
         };
 
-        // モーダルのフォーム数、フォームを初期化
-        $('#passAlert').text("");
-        $('#title').val('');
-        $('#password').val('');
-        $('#task1').val('');
-
         // オブジェクトにtask2以降のフォームの中身を追加
         let addedTask = document.getElementById("addedTask");
         for (let i = 2; i <= countTask; i++) {
-            let item = addedTask.childNodes[i - 2].childNodes[1];
+            let item = addedTask.childNodes[i - 2].childNodes[2];
+            let alertElement = addedTask.childNodes[i - 2].childNodes[0];
+            console.log(alertElement);
+            if (item.value === "") {
+                alertElement.textContent = "入力してください";
+                return;
+            } else if (item.value.length > 10) {
+                alertElement.textContent = "10文字以内で入力してください";
+                return;
+            }
             json[item.id] = item.value;
         }
 
@@ -133,12 +132,14 @@ function AddTaskToDB() {
             addedTask.removeChild(targetElement);
         }
 
+        // モーダルのフォーム数、フォームを初期化
+        $('#passAlert').text("");
+        $('#title').val('');
+        $('#password').val('');
+        $('#task1').val('');
+
         // カウント変数初期化
-        countTask = 1;
-
-        // モーダルを消す
-        $('#registerNew').modal('hide');
-
+        countTask = 1;       
     }
     let data = JSON.stringify({ jsonString: JSON.stringify(json) });
     $.ajax({
@@ -154,12 +155,33 @@ function AddTaskToDB() {
             alert("通信に失敗しました");
         }
     });
+    $('#registerNew').modal('hide');
 }
 function OnSuccessOperateDB(response) {
     if (response.d === "success") {
-        // TODO:画面を更新
-        
+        // テーブル再取得
+        GetTable();
     } else {
         alert("登録失敗しました");
     }
+}
+function GetTable() {
+    let data = {
+        userId: "admin"
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "../API/GetJsonString.aspx/GetRegisteredProgresses",
+        data: JSON.stringify(data),
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        cache: false,
+        timeout: 5000,
+        success: OnSuccess,
+        error: (xhr, ajaxOptions, thrownError) => {
+            FailedGetJson("通信に失敗しました");
+        }
+    });
 }

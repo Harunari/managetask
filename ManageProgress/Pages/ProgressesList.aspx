@@ -9,8 +9,12 @@
     <link href="../Content/bootstrap.css" rel="stylesheet" />
     <script src="../Scripts/bootstrap.js"></script>
     <script src="../Scripts/popper.js"></script>
+    <style>
+        .alert1 {
+            color: red;
+        }
+    </style>
 </head>
-
 <body>
     <form id="form1" runat="server">
         <div id="loginId" runat="server"></div>
@@ -39,16 +43,18 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>タイトル</label>
+                            <div id="titleAlert" class="alert1"></div>
+                            <label>タイトル(10文字以内)</label>
                             <input type="text" id="title" class="form-control" />
                         </div>
                         <div class="form-group">
-                            <div id="passAlert"></div>
+                            <div id="passAlert" class="alert1"></div>
                             <label>パスワード</label>
                             <input type="password" id="password" class="form-control" maxlength="15" />
                         </div>
                         <div class="form-group" id="1">
-                            <label>タスク1</label>
+                            <div id="task1Alert" class="alert1"></div>
+                            <label>タスク1(10文字以内)</label>
                             <input type="text" id="task1" class="form-control" />
                         </div>
 

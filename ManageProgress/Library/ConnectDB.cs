@@ -22,7 +22,7 @@ namespace ManageProgress.Library
             using (var cmd = conn.CreateCommand())
             {
                 conn.Open();
-                cmd.CommandText = @"SELECT * From Progresses";
+                cmd.CommandText = @"SELECT * FROM Progresses";
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -40,6 +40,67 @@ namespace ManageProgress.Library
             }
             return result;
         }
+        public List<ParticipantModel> GetParticipants(int progressId)
+        {
+            List<ParticipantModel> result = new List<ParticipantModel>();
+            using (var conn = new SqlConnection(_connectString))
+            using (var cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                cmd.CommandText = @"
+SELECT *
+FROM 
+    Participants
+WHERE
+    ProgressId = @ProgressId";
+                cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = progressId;
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new ParticipantModel
+                        {
+                            Id = (int)reader["Id"],
+                            ProgressId = (int)reader["ProgressId"],
+                            ParticipantName = (string)reader["ParticipantName"],
+                            CurrentProgress = (int)reader["CurrentProgress"]
+                        });
+                    }
+                }
+                return result;
+
+            }
+        }
+        public List<TaskModel> GetTasks(int progressId)
+        {
+            List<TaskModel> result = new List<TaskModel>();
+            using (var conn = new SqlConnection(_connectString))
+            using (var cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                cmd.CommandText = @"
+SELECT *
+FROM 
+    Tasks
+WHERE
+    ProgressId = @ProgressId";
+                cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = progressId;
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new TaskModel
+                        {
+                            Id = (int)reader["Id"],
+                            ProgressId = (int)reader["ProgressId"],
+                            Task = (string)reader["Task"]
+                        });
+                    }
+                }
+                return result;
+            }
+        }
+
         // TODO: GETProgress(loginId) ログイン中のユーザの進捗のみを表示するメソッドを作る
 
         public bool IsCorrectPassword(ParticipantModel participant, string inputPassword)
