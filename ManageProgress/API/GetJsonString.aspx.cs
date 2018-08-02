@@ -23,7 +23,7 @@ namespace ManageProgress.API
                 string json = JsonConvert.SerializeObject(result, Formatting.Indented);
                 return json;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return "error";
                 
@@ -40,7 +40,7 @@ namespace ManageProgress.API
                 string json = JsonConvert.SerializeObject(result, Formatting.Indented);
                 return json;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 return "error";
@@ -57,7 +57,7 @@ namespace ManageProgress.API
                 string json = JsonConvert.SerializeObject(result, Formatting.Indented);
                 return json;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 return "error";

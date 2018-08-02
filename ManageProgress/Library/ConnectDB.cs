@@ -22,7 +22,7 @@ namespace ManageProgress.Library
             using (var cmd = conn.CreateCommand())
             {
                 conn.Open();
-                cmd.CommandText = @"SELECT * FROM Progresses";
+                cmd.CommandText = @"SELECT * FROM [dbo].[Progresses]";
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -50,7 +50,7 @@ namespace ManageProgress.Library
                 cmd.CommandText = @"
 SELECT *
 FROM 
-    Participants
+    [dbo].[Participants]
 WHERE
     ProgressId = @ProgressId";
                 cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = progressId;
@@ -81,7 +81,7 @@ WHERE
                 cmd.CommandText = @"
 SELECT *
 FROM 
-    Tasks
+    [dbo].[Tasks]
 WHERE
     ProgressId = @ProgressId";
                 cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = progressId;
@@ -137,7 +137,7 @@ WHERE
                 }
             }
         }
-        public bool ExistSameName(ParticipantModel participant)
+        public bool IsExistSameName(ParticipantModel participant)
         {
             using (var conn = new SqlConnection(_connectString))
             using (var cmd = conn.CreateCommand())
@@ -149,7 +149,7 @@ WHERE
 SELECT
     *
 FROM 
-    Participants 
+    [dbo].[Participants] 
 WHERE 
     ParticipantName = @ParticipantName
 AND 
@@ -173,7 +173,7 @@ AND
 
             }
         }
-        public void RegisterParticipant(ParticipantModel participant)
+        public void SetParticipant(ParticipantModel participant)
         {
             using (var conn = new SqlConnection(_connectString))
             using (var cmd = conn.CreateCommand())
@@ -184,7 +184,7 @@ AND
                     cmd.CommandText = @"
 INSERT 
 INTO 
-Participants
+[dbo].[Participants]
 VALUES
     (@ProgressId, 
     @ParticipantName, 
@@ -216,7 +216,7 @@ VALUES
                         cmd.CommandText = @"
 INSERT 
 INTO 
-Progresses 
+[dbo].[Progresses] 
 OUTPUT INSERTED.Id
 VALUES
     (@UserId, 
@@ -236,7 +236,7 @@ VALUES
                             cmd.Parameters.Clear();
                             cmd.CommandText = @"
 INSERT
-INTO Tasks
+INTO [dbo].[Tasks]
 VALUES
     (@ProgressId,
     @Task)";
@@ -268,7 +268,7 @@ VALUES
                         cmd.Parameters.Clear();
                         cmd.CommandText = @"
 INSERT
-INTO Tasks
+INTO [dbo].[Tasks]
 VALUES
     (@ProgressId,
     @Task)";

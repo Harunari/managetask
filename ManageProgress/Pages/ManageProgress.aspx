@@ -10,15 +10,48 @@
     <link href="../Content/bootstrap.css" rel="stylesheet" />
     <script src="../Scripts/bootstrap.js"></script>
     <script src="../Scripts/popper.js"></script>
+    <style>
+        .headerCell {
+            height:100px;
+            width: 100px;
+        }
+
+        .taskCell {
+            background-color: #a0c238;
+            height: 100px;
+            width: 100px;
+            
+        }
+
+        .achiveCell {
+            height: 100px;
+            width: 100px;
+        }
+
+        .normalCell {
+            background-color: white;
+            height: 100px;
+            width: 100px;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-light">
     <form id="form1" runat="server">
-        <div>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#join">
-                参加
-            </button>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-4">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#join">
+                        参加
+                    </button>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-10 col-md-offset-2">
+                    <div id="tb"></div>
+                </div>
+            </div>
         </div>
-        <div id="tb"></div>
 
         <div class="modal fade" id="join" tabindex="-1" role="dialog" aria-labelledby="#joinTitle" aria-hidden="true">
             <div class="modal-dialog" role="document">

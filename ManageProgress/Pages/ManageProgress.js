@@ -18,6 +18,7 @@ function AjaxCommunication() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         cache: false,
+        timeout: 5000,
         success: OnSuccessGetParticipants,
         error: (xhr, ajaxOptions, thrownError) => {
             alert("通信に失敗しました");
@@ -31,6 +32,7 @@ function AjaxCommunication() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         cache: false,
+        timeout: 5000,
         success: OnSuccessGetTasks,
         error: (xhr, ajaxOptions, thrownError) => {
             alert("通信に失敗しました");
@@ -39,35 +41,35 @@ function AjaxCommunication() {
 }
 function CreateTable(members, tks) {
     let tag;
+    let width = (members.length + 2) * 100;
+    console.log(width);
     tag = "" +
-        "<div class='d-table' id='taskTable'>" +
-        "<div class='d-table-row'>" +
-        "<p class='d-table-cell p-2 bg-dark text-white'>" +
-        "タスク名" +
-        "</p>";
+        "<div id='taskTable' class='bg-light' style='overflow:auto;height:400px;width:" + width + "px;'>" +
+        "<div class='headerCell bg-info text-white' style='display:flex; align-items:center;display:flex;float: left'>" +
+        "タスク" +
+        "</div>";
     for (let i = 0; i < members.length; i++) {
-        tag += "<p class='d-table-cell p-2 bg-dark text-white'>" +
+        tag += "" +
+            "<div class='headerCell bg-info text-white' style='display:flex; align-items:center;float:left'>" +
             members[i].participantName +
-            "</p>";
+            "</div>";
     }
-    tag += "</div>";
 
     for (let i = 1; i <= tks.length; i++) {
         tag += "" +
-            "<div class='d-table-row'>" +
-            "<p class='d-table-cell p-2 bg-dark text-white'>" +
+            "<div class='taskCell'></div>" +
+            "<div class='taskCell' style='display:flex;align-items:center;display:flex;float:left'>" +
             i + "." +
             tks[i - 1].task +
-            "</p>";
+            "</div>";
         for (let j = 0; j < members.length; j++) {
             // tks[i].taskのタスクが終わっているかどうか
             if (members[j].currentProgress >= i) {
-                tag += "<p class='d-table-cell p-2 bg-primary text-white'>済み</p>";
+                tag += "<div class='achiveCell bg-warning' style='display:flex;align-items:center;float:left;'></div>";
             } else {
-                tag += "<p class='d-table-cell p-2  text-white' style='background-color: gray;'></p>";
+                tag += "<div class='normalCell bg-light' style='display:flex;align-items:center;float:left;'></div>";
             }
         }
-        tag += "</div>";
     }
     tag += "</div>";
     let resultTag = document.getElementById("tb");

@@ -150,6 +150,7 @@ function AddTaskToDB() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         cache: false,
+        timeout: 5000,
         success: OnSuccessOperateDB,
         error: (xhr, ajaxOptions, thrownError) => {
             alert("通信に失敗しました");

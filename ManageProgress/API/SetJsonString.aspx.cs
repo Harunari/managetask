@@ -41,7 +41,7 @@ namespace ManageProgress.API
                 }
                 return "failed";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return "error";
             }
@@ -70,12 +70,12 @@ namespace ManageProgress.API
                 {
                     return "wrongPassword";
                 }
-                if (cdb.ExistSameName(participant))
+                if (cdb.IsExistSameName(participant))
                 {
                     return "sameNameExisted";
                 }
 
-                cdb.RegisterParticipant(participant);
+                cdb.SetParticipant(participant);
 
                 return "registeredSuccess";
             }
