@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>進捗一覧</title>
     <script src="../Scripts/jquery-3.3.1.js"></script>
     <link href="../Content/bootstrap.css" rel="stylesheet" />
@@ -61,8 +62,8 @@
                         <div id="addedTask"></div>
 
                         <div class="col-xs-offset-2 col-xs-10">
-                            <input type="button" class="btn btn-default" value="タスク追加" onclick="AddTaskForm()"/>
-                            <input type="button" class="btn btn-default" value="タスク削減" onclick="RemoveTaskForm()"/>
+                            <input type="button" class="btn btn-default" value="タスク追加" onclick="AddTaskForm()" />
+                            <input type="button" class="btn btn-default" value="タスク削減" onclick="RemoveTaskForm()" />
                         </div>
 
                     </div>

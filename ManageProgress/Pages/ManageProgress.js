@@ -41,35 +41,36 @@ function AjaxCommunication() {
 }
 function CreateTable(members, tks) {
     let tag;
-    let width = (members.length + 2) * 100;
+    let width = (members.length + 2) * 50;
     console.log(width);
     tag = "" +
-        "<div id='taskTable' class='bg-light' style='overflow:auto;height:400px;width:" + width + "px;'>" +
-        "<div class='headerCell bg-info text-white' style='display:flex; align-items:center;display:flex;float: left'>" +
-        "タスク" +
-        "</div>";
+        "<div id='taskTable' style='overflow:auto;width:" + width + "px'>" +
+        "<div class='d-table-row'>" +
+        "<p class='d-table-cell p-2 bg-dark text-white'>" +
+        "タスク名" +
+        "</p>";
     for (let i = 0; i < members.length; i++) {
-        tag += "" +
-            "<div class='headerCell bg-info text-white' style='display:flex; align-items:center;float:left'>" +
+        tag += "<p class='d-table-cell p-2 bg-dark text-white'>" +
             members[i].participantName +
-            "</div>";
+            "</p>";
     }
-
+    tag += "</div>";
     for (let i = 1; i <= tks.length; i++) {
         tag += "" +
-            "<div class='taskCell'></div>" +
-            "<div class='taskCell' style='display:flex;align-items:center;display:flex;float:left'>" +
+            "<div class='d-table-row'>" +
+            "<p class='d-table-cell p-2 bg-dark text-white'>" +
             i + "." +
             tks[i - 1].task +
-            "</div>";
+            "</p>";
         for (let j = 0; j < members.length; j++) {
             // tks[i].taskのタスクが終わっているかどうか
             if (members[j].currentProgress >= i) {
-                tag += "<div class='achiveCell bg-warning' style='display:flex;align-items:center;float:left;'></div>";
+                tag += "<p class='d-table-cell p-2 bg-primary text-white'>済み</p>";
             } else {
-                tag += "<div class='normalCell bg-light' style='display:flex;align-items:center;float:left;'></div>";
+                tag += "<p class='d-table-cell p-2  text-white' style='background-color: gray;'></p>";
             }
         }
+        tag += "</div>";
     }
     tag += "</div>";
     let resultTag = document.getElementById("tb");

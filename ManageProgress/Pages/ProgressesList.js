@@ -24,7 +24,7 @@ function OnSuccess(response) {
 function CreateTable(progresses) {
     let tag;
     tag = "" +
-        "<table id='table' class='table table-hover table-striped'>" +
+        "<table id='table' class='table table-hover table-striped table-responsive'>" +
         "<thead class='thead-dark'>" +
         "<tr>" +
         "<th scope='col'>題名</th>" +

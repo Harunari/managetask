@@ -5,6 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>タスク表</title>
     <script src="../Scripts/jquery-3.3.1.js"></script>
     <link href="../Content/bootstrap.css" rel="stylesheet" />
@@ -48,7 +49,7 @@
             <br />
             <div class="row">
                 <div class="col-md-10 col-md-offset-2">
-                    <div id="tb"></div>
+                    <div id="tb" class="container table-responsive"></div>
                 </div>
             </div>
         </div>
