@@ -1,13 +1,78 @@
 ﻿"use strict";
 let param, json, participants, tasks;
+let selectedMember, currentProgress;
 window.onload = () => {
-    let urlParam = location.search.substring(1);
-    if (urlParam) {
-        param = urlParam.split('=');
+    try {
+        let urlParam = location.search.substring(1);
+        if (urlParam) {
+            param = urlParam.split('=');
+        }
+        AjaxCommunication();
+    } catch (e) {
+        window.close();
     }
-    AjaxCommunication();
+
+    // 名前を押したとき進捗調整できる
+    $("#tb").on('click', '#taskTable>#header>p', e => {
+        if (e.target.innerText === "タスク名") {
+            return;
+        }
+        selectedMember = e.target.innerText;
+        $('#changeProgress').modal();
+        let selected = document.getElementById("changeProgressTitle");
+        selected.innerText = "進捗管理" + "(" + selectedMember + ")";
+        let rangeParentTag = document.getElementById("progressRange");
+        let tag = "" +
+            "<input id='currentProgress' min='0'" +
+            "max='" +
+            tasks.length +
+            "' step='1' type='range' />" +
+            "<span id='value'></span>";
+        rangeParentTag.innerHTML = tag;
+        let elem = rangeParentTag.childNodes[0];
+        let target = rangeParentTag.childNodes[1];
+        let rangeValue = (elem, target) => {
+            return function (evt) {
+                target.innerHTML = elem.value;
+                currentProgress = elem.value;
+            }
+        }
+        elem.addEventListener('input', rangeValue(elem, target));
+    });
 
 };
+function ChangeProgressToDb() {
+    json = {
+        progressId: param[1],
+        participantName: selectedMember,
+        currentProgress: currentProgress,
+    };
+
+    let strData = JSON.stringify(json);
+
+    $.ajax({
+        type: "POST",
+        url: "../API/SetJsonString.aspx/ChangeProgress",
+        data: JSON.stringify({ jsonString: strData }),
+        async: true,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        cache: false,
+        timeout: 5000
+    }).done(data => {
+        if (data.d === "error") {
+            alert("サーバ内部でエラーが発生しました");
+            return;
+        } else if (data.d === "nil") {
+            alert("データが存在しません");
+            return;
+        }
+        AjaxCommunication();
+    }).fail(data => {
+        alert("通信に失敗しました");
+    });
+    $('#changeProgress').modal('hide');
+}
 function AjaxCommunication() {
     let data = JSON.stringify({ strProgressId: param[1] });
     $.ajax({
@@ -45,12 +110,13 @@ function CreateTable(members, tks) {
     console.log(width);
     tag = "" +
         "<div id='taskTable' style='overflow:auto;width:" + width + "px'>" +
-        "<div class='d-table-row'>" +
+        "<div class='d-table-row' id='header'>" +
         "<p class='d-table-cell p-2 bg-dark text-white'>" +
         "タスク名" +
         "</p>";
     for (let i = 0; i < members.length; i++) {
-        tag += "<p class='d-table-cell p-2 bg-dark text-white'>" +
+        tag += "" +
+            "<p class='d-table-cell p-2 bg-dark text-white'>" +
             members[i].participantName +
             "</p>";
     }

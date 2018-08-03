@@ -8,7 +8,7 @@ window.onload = () => {
     GetTable();
     $('#result').on('click', 'table>tbody', e => {
         let progressId = e.target.parentNode.id;
-        window.location.href = "ManageProgress.aspx?progressId=" + progressId;
+        window.open("ManageProgress.aspx?progressId=" + progressId,"","", true);
     });
 };
 

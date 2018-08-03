@@ -45,7 +45,7 @@ namespace ManageProgress.API
             {
                 return "error";
             }
-            
+
         }
 
         [WebMethod]
@@ -83,11 +83,37 @@ namespace ManageProgress.API
             {
                 return "error";
             }
-            
+
 
         }
 
+        [WebMethod]
+        public static string ChangeProgress(string jsonString)
+        {
+            var cdb = new ConnectDB("Database1");
+            if (jsonString == "")
+            {
+                return "nil";
+            }
+            var receivedData = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonString);
+            try
+            {
+                var participant = new ParticipantModel
+                {
+                    ProgressId = int.Parse(receivedData["progressId"]),
+                    ParticipantName = receivedData["participantName"],
+                    CurrentProgress = int.Parse(receivedData["currentProgress"])
+                };
+                cdb.ChangeProgress(participant);
+                return "success";
+                
+            }
+            catch (Exception ex)
+            {
 
+                return "error";
+            }
+        }
 
     }
 }

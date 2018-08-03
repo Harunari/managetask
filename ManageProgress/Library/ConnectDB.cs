@@ -250,7 +250,7 @@ VALUES
                     catch (Exception ex)
                     {
 
-                        return false;
+                        throw;
                     }
                 }
             }
@@ -282,6 +282,35 @@ VALUES
                 catch
                 {
                     return false;
+                }
+            }
+        }
+        public bool ChangeProgress(ParticipantModel participant)
+        {
+            using (var conn = new SqlConnection(_connectString))
+            using (var cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                try
+                {
+                    cmd.CommandText = @"
+UPDATE
+[dbo].[Participants] 
+SET 
+CurrentProgress = @CurrentProgress 
+WHERE
+ProgressId = @ProgressId
+AND
+ParticipantName = @ParticipantName;";
+                    cmd.Parameters.Add(new SqlParameter("@CurrentProgress", SqlDbType.Int)).Value = participant.CurrentProgress;
+                    cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = participant.ProgressId;
+                    cmd.Parameters.Add(new SqlParameter("@ParticipantName", SqlDbType.NVarChar,50)).Value = participant.ParticipantName;
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw;
                 }
             }
         }
