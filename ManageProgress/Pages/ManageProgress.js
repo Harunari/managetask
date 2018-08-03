@@ -31,10 +31,10 @@ window.onload = () => {
         rangeParentTag.innerHTML = tag;
         let elem = rangeParentTag.childNodes[0];
         let target = rangeParentTag.childNodes[1];
+        target.innerHTML = elem.value;
         let rangeValue = (elem, target) => {
             return function (evt) {
                 target.innerHTML = elem.value;
-                currentProgress = elem.value;
             }
         }
         elem.addEventListener('input', rangeValue(elem, target));
@@ -42,7 +42,10 @@ window.onload = () => {
 
 };
 function ChangeProgressToDb() {
-    json = {
+    let rangeParentTag = document.getElementById("progressRange");
+    let elem = rangeParentTag.childNodes[0];
+    currentProgress = elem.value;
+    let json = {
         progressId: param[1],
         participantName: selectedMember,
         currentProgress: currentProgress,
