@@ -29,7 +29,7 @@ namespace ManageProgress.Library
                 try
                 {
                     conn.Open();
-                    cmd.CommandText = @"SELECT * FROM [dbo].[Progresses]";
+                    cmd.CommandText = @"SELECT * FROM [dbo].[Progresses]　WITH(NOLOCK)";
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -67,6 +67,7 @@ SELECT
 * 
 FROM
     [dbo].[Progresses] 
+WITH(NOLOCK)
 WHERE 
     UserId = @UserId";
                     cmd.Parameters.Add(new SqlParameter("@UserId", SqlDbType.NVarChar, 15)).Value = userId;
@@ -106,6 +107,7 @@ SELECT
 *
 FROM 
     [dbo].[Participants]
+WITH(NOLOCK)
 WHERE
     ProgressId = @ProgressId";
                 cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = progressId;
@@ -138,6 +140,7 @@ SELECT
 *
 FROM 
     [dbo].[Tasks]
+WITH(NOLOCK)
 WHERE
     ProgressId = @ProgressId";
                 cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = progressId;
@@ -170,6 +173,7 @@ SELECT
     Password
 FROM 
     [dbo].[Progresses]
+WITH(NOLOCK)
 WHERE
     Id = @Id;";
                     cmd.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int)).Value = participant.ProgressId;
@@ -204,6 +208,7 @@ SELECT
     *
 FROM 
     [dbo].[Participants] 
+WITH(NOLOCK)
 WHERE 
     ParticipantName = @ParticipantName
 AND 
@@ -387,6 +392,7 @@ ParticipantName
 SELECT
 TOP (1) *
 FROM [dbo].[Users]
+WITH(NOLOCK)
 WHERE
 UserId = @UserId";
                             cmd.Parameters.Add(new SqlParameter("@UserId", SqlDbType.NVarChar, 15)).Value = userId;
@@ -396,6 +402,7 @@ UserId = @UserId";
 SELECT
 TOP (1) *
 FROM [dbo].[Users]
+WITH(NOLOCK)
 WHERE
 Email = @Email;";
                             cmd.Parameters.Add(new SqlParameter("@Email", SqlDbType.NVarChar, 50)).Value = userId;
@@ -459,6 +466,7 @@ SELECT
 TOP (1) *
 FROM
     [dbo].[Users]
+WITH(NOLOCK)
 WHERE
     UserId = @UserId
 AND
