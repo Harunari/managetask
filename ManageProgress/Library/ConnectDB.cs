@@ -297,14 +297,11 @@ VALUES
 UPDATE
 [dbo].[Participants] 
 SET 
-CurrentProgress
-    = @CurrentProgress 
+CurrentProgress = @CurrentProgress 
 WHERE
-ProgressId
-    = @ProgressId
+ProgressId = @ProgressId
 AND
-ParticipantName 
-    = @ParticipantName;";
+ParticipantName = @ParticipantName;";
                     cmd.Parameters.Add(new SqlParameter("@CurrentProgress", SqlDbType.Int)).Value = participant.CurrentProgress;
                     cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = participant.ProgressId;
                     cmd.Parameters.Add(new SqlParameter("@ParticipantName", SqlDbType.NVarChar,50)).Value = participant.ParticipantName;
