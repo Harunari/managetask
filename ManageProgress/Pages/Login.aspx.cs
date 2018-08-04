@@ -30,6 +30,13 @@ namespace ManageProgress.Pages
                 if (cdb.IsLogined(loginUser))
                 {
                     Session["LoginId"] = loginUser.UserId;
+                    loginAlert.Text = "" +
+                        "<script>sessionStorage.setItem('loginId', '" +
+                        loginUser.UserId + "');" +
+                        "</script>";
+                    loginAlert.Text = "" +
+                        "<script>console.log(sessionStorage.getItem('loginId');" +
+                        "</script>";
                     Response.Redirect("~/Pages/ProgressesList.aspx");
                 }
                 loginAlert.Text = "IDまたはパスワードが間違っています";

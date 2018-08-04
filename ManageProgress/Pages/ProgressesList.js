@@ -4,6 +4,7 @@
 let countTask = 1;
 
 window.onload = () => {
+    sessionStorage.setItem('loginId', $('#loginId').text());
     countTask = 1;
     GetTable();
     $('#result').on('click', 'table>tbody', e => {
@@ -170,10 +171,9 @@ function OnSuccessOperateDB(response) {
     }
 }
 function GetTable() {
-    loginId = document.getElementById("loginId");
-    console.log(loginId.innerText);
+    let loginId = sessionStorage.getItem('loginId');
     let data = {
-        userId: loginId.innerText
+        userId: loginId
     };
 
     $.ajax({
