@@ -8,7 +8,7 @@ window.onload = () => {
     GetTable();
     $('#result').on('click', 'table>tbody', e => {
         let progressId = e.target.parentNode.id;
-        window.open("ManageProgress.aspx?progressId=" + progressId,"","", true);
+        window.open("ManageProgress.aspx?progressId=" + progressId, "", "", true);
     });
 };
 
@@ -63,7 +63,7 @@ function AddTaskForm() {
     divElement.setAttribute('id', countTask);
 
     tag = "" +
-        "<div class='alert1' id='task" + countTask + "Alert'></div>"+
+        "<div class='alert1' id='task" + countTask + "Alert'></div>" +
         "<label>タスク" + countTask + "(10文字以内)</label>" +
         "<input type='text' id='task" + countTask + "' class='form-control' />";
 
@@ -86,7 +86,7 @@ function AddTaskToDB() {
     if ($('#title').val() === "") {
         $('#titleAlert').text("タイトルを入力してください");
         return;
-    } else if ($('#title').val().length  > 10) {
+    } else if ($('#title').val().length > 10) {
         $('#titleAlert').text("10文字以内で入力してください");
         return;
     }
@@ -97,10 +97,13 @@ function AddTaskToDB() {
         $('#task1Alert').text("10文字以内で入力してください");
         return;
     }
-    
     if ($('#password').val() === "") {
         $('#passAlert').text("パスワードを入力してください");
         return;
+    } else if ($('#password').val() !== $('#passwordRe').val()) {
+        $('#passAlert').text("パスワードが一致していません");
+        return;
+
     } else {
         json = {
             userId: $('#loginId').text(),
@@ -139,7 +142,7 @@ function AddTaskToDB() {
         $('#task1').val('');
 
         // カウント変数初期化
-        countTask = 1;       
+        countTask = 1;
     }
     let data = JSON.stringify({ jsonString: JSON.stringify(json) });
     $.ajax({
@@ -167,8 +170,10 @@ function OnSuccessOperateDB(response) {
     }
 }
 function GetTable() {
+    loginId = document.getElementById("loginId");
+    console.log(loginId.innerText);
     let data = {
-        userId: "admin"
+        userId: loginId.innerText
     };
 
     $.ajax({

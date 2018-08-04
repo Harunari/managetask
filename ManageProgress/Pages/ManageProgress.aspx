@@ -92,7 +92,13 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="progressRange">
+                    <div class="modal-body">
+                        <div class="form-group"  id="progressRange"></div>
+                        <div class="form-group">
+                            <div id="progPassAlert" style="color:red;"></div>
+                            <label>パスワード</label>
+                            <input type="password" id="progPass" class="form-control" maxlength="15" />
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>

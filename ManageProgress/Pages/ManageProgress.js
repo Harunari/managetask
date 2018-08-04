@@ -31,22 +31,27 @@ window.onload = () => {
         rangeParentTag.innerHTML = tag;
         let elem = rangeParentTag.childNodes[0];
         let target = rangeParentTag.childNodes[1];
+        target.innerHTML = elem.value;
+        currentProgress = elem.value;
         let rangeValue = (elem, target) => {
             return function (evt) {
                 target.innerHTML = elem.value;
                 currentProgress = elem.value;
             }
         }
+        rangeValue(elem, target);
         elem.addEventListener('input', rangeValue(elem, target));
     });
 
 };
 function ChangeProgressToDb() {
-    json = {
+    let json = {
         progressId: param[1],
         participantName: selectedMember,
         currentProgress: currentProgress,
+        progPassword: $('#progPass').val()
     };
+    console.log($('#progPass').val())
 
     let strData = JSON.stringify(json);
 
@@ -60,18 +65,22 @@ function ChangeProgressToDb() {
         cache: false,
         timeout: 5000
     }).done(data => {
+        console.log(data);
         if (data.d === "error") {
-            alert("サーバ内部でエラーが発生しました");
+            $('#progPassAlert').text("サーバ内部でエラーが発生しました");
             return;
         } else if (data.d === "nil") {
-            alert("データが存在しません");
+            $('#progPassAlert').text("データが存在しません");
             return;
+        } else if (data.d === "wrongPassword") {
+            $('#progPassAlert').text("パスワードが間違っています");
+            return;
+        } else {
+            AjaxCommunication();
         }
-        AjaxCommunication();
     }).fail(data => {
         alert("通信に失敗しました");
     });
-    $('#changeProgress').modal('hide');
 }
 function AjaxCommunication() {
     let data = JSON.stringify({ strProgressId: param[1] });
@@ -155,6 +164,7 @@ function OnSuccessGetTasks(response) {
     tasks = JSON.parse(response.d);
     CreateTable(participants, tasks);
     $('#join').modal('hide');
+    $('#changeProgress').modal('hide');
 }
 function addParticipantDataToDb() {
     // バリデーション

@@ -47,7 +47,6 @@ namespace ManageProgress.API
             }
 
         }
-
         [WebMethod]
         public static string SetNewParticipant(string jsonString)
         {
@@ -86,7 +85,6 @@ namespace ManageProgress.API
 
 
         }
-
         [WebMethod]
         public static string ChangeProgress(string jsonString)
         {
@@ -104,8 +102,13 @@ namespace ManageProgress.API
                     ParticipantName = receivedData["participantName"],
                     CurrentProgress = int.Parse(receivedData["currentProgress"])
                 };
-                cdb.ChangeProgress(participant);
-                return "success";
+                var password = receivedData["progPassword"];
+                if (cdb.IsCorrectPassword(participant, password))
+                {
+                    cdb.ChangeProgress(participant);
+                    return "success";
+                }
+                return "wrongPassword";
                 
             }
             catch (Exception ex)

@@ -7,6 +7,11 @@ using System.Data.SqlClient;
 
 namespace ManageProgress.Library
 {
+    public enum InputType
+    {
+        UserId, Email
+    }
+
     public class ConnectDB
     {
         private string _connectString;
@@ -21,24 +26,73 @@ namespace ManageProgress.Library
             using (var conn = new SqlConnection(_connectString))
             using (var cmd = conn.CreateCommand())
             {
-                conn.Open();
-                cmd.CommandText = @"SELECT * FROM [dbo].[Progresses]";
-                using (var reader = cmd.ExecuteReader())
+                try
                 {
-                    while (reader.Read())
+                    conn.Open();
+                    cmd.CommandText = @"SELECT * FROM [dbo].[Progresses]";
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        result.Add(new ProgressModel
+                        while (reader.Read())
                         {
-                            Id = (int)reader["Id"],
-                            Title = (string)reader["Title"],
-                            UserId = (string)reader["UserId"],
-                            DateTimeRegistered = (DateTime)reader["DateTime_Registered"],
-                            NumberOfTask = (int)reader["Number_Of_Items"]
-                        });
+                            result.Add(new ProgressModel
+                            {
+                                Id = (int)reader["Id"],
+                                Title = (string)reader["Title"],
+                                UserId = (string)reader["UserId"],
+                                DateTimeRegistered = (DateTime)reader["DateTime_Registered"],
+                                NumberOfTask = (int)reader["Number_Of_Items"]
+                            });
+                        }
                     }
+                    return result;
+                }
+                catch
+                {
+
+                    throw;
                 }
             }
-            return result;
+        }
+        public List<ProgressModel> GetAProgress(string userId)
+        {
+            try
+            {
+                var result = new List<ProgressModel>();
+                using (var conn = new SqlConnection(_connectString))
+                using (var cmd = conn.CreateCommand())
+                {
+                    conn.Open();
+                    cmd.CommandText = @"
+SELECT 
+* 
+FROM
+    [dbo].[Progresses] 
+WHERE 
+    UserId = @UserId";
+                    cmd.Parameters.Add(new SqlParameter("@UserId", SqlDbType.NVarChar, 15)).Value = userId;
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            result.Add(new ProgressModel
+                            {
+                                Id = (int)reader["Id"],
+                                Title = (string)reader["Title"],
+                                UserId = (string)reader["UserId"],
+                                DateTimeRegistered = (DateTime)reader["DateTime_Registered"],
+                                NumberOfTask = (int)reader["Number_Of_Items"]
+                            });
+                        }
+                    }
+                }
+                return result;
+            }
+            catch
+            {
+
+                throw;
+            }
+
         }
         public List<ParticipantModel> GetParticipants(int progressId)
         {
@@ -48,7 +102,8 @@ namespace ManageProgress.Library
             {
                 conn.Open();
                 cmd.CommandText = @"
-SELECT *
+SELECT 
+*
 FROM 
     [dbo].[Participants]
 WHERE
@@ -79,7 +134,8 @@ WHERE
             {
                 conn.Open();
                 cmd.CommandText = @"
-SELECT *
+SELECT 
+*
 FROM 
     [dbo].[Tasks]
 WHERE
@@ -100,9 +156,6 @@ WHERE
                 return result;
             }
         }
-
-        // TODO: GETProgress(loginId) ログイン中のユーザの進捗のみを表示するメソッドを作る
-
         public bool IsCorrectPassword(ParticipantModel participant, string inputPassword)
         {
             using (var conn = new SqlConnection(_connectString))
@@ -113,9 +166,10 @@ WHERE
                     conn.Open();
                     cmd.CommandText = @"
 SELECT 
+    TOP (1)
     Password
 FROM 
-    Progresses
+    [dbo].[Progresses]
 WHERE
     Id = @Id;";
                     cmd.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int)).Value = participant.ProgressId;
@@ -173,6 +227,7 @@ AND
 
             }
         }
+
         public void SetParticipant(ParticipantModel participant)
         {
             using (var conn = new SqlConnection(_connectString))
@@ -247,7 +302,7 @@ VALUES
                         sqlTran.Commit();
                         return true;
                     }
-                    catch (Exception ex)
+                    catch
                     {
 
                         throw;
@@ -304,12 +359,122 @@ AND
 ParticipantName = @ParticipantName;";
                     cmd.Parameters.Add(new SqlParameter("@CurrentProgress", SqlDbType.Int)).Value = participant.CurrentProgress;
                     cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = participant.ProgressId;
-                    cmd.Parameters.Add(new SqlParameter("@ParticipantName", SqlDbType.NVarChar,50)).Value = participant.ParticipantName;
+                    cmd.Parameters.Add(new SqlParameter("@ParticipantName", SqlDbType.NVarChar, 50)).Value = participant.ParticipantName;
                     cmd.ExecuteNonQuery();
                     return true;
                 }
                 catch (Exception ex)
                 {
+                    throw;
+                }
+            }
+        }
+        public bool IsExist(InputType inputType, string userId)
+        {
+            using (var conn = new SqlConnection(_connectString))
+            using (var cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                try
+                {
+                    switch (inputType)
+                    {
+                        case InputType.UserId:
+                            cmd.CommandText = @"
+SELECT
+TOP (1) *
+FROM [dbo].[Users]
+WHERE
+UserId = @UserId";
+                            cmd.Parameters.Add(new SqlParameter("@UserId", SqlDbType.NVarChar, 15)).Value = userId;
+                            break;
+                        case InputType.Email:
+                            cmd.CommandText = @"
+SELECT
+TOP (1) *
+FROM [dbo].[Users]
+WHERE
+Email = @Email;";
+                            cmd.Parameters.Add(new SqlParameter("@Email", SqlDbType.NVarChar, 50)).Value = userId;
+                            break;
+                    }
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                catch
+                {
+                    throw;
+                }
+
+            }
+        }
+        public void RegisterUserInformation(UserModel RegisterUser)
+        {
+            try
+            {
+                using (var conn = new SqlConnection(_connectString))
+                using (var cmd = conn.CreateCommand())
+                {
+                    conn.Open();
+                    cmd.CommandText = @"
+INSERT
+INTO [dbo].[Users]
+VALUES
+    (@UserId,
+    @Email,
+    @Password)";
+                    cmd.Parameters.Add(new SqlParameter("@UserId", SqlDbType.NVarChar, 15)).Value = RegisterUser.UserId;
+                    cmd.Parameters.Add(new SqlParameter("@Email", SqlDbType.NVarChar, int.MaxValue)).Value = RegisterUser.Email;
+                    cmd.Parameters.Add(new SqlParameter("@Password", SqlDbType.NVarChar, 15)).Value = RegisterUser.Password;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+        }
+        public bool IsLogined(UserModel loginUser)
+        {
+            using (var conn = new SqlConnection(_connectString))
+            using (var cmd = conn.CreateCommand())
+            {
+                conn.Open();
+                try
+                {
+                    cmd.CommandText = @"
+SELECT
+TOP (1) *
+FROM
+    [dbo].[Users]
+WHERE
+    UserId = @UserId
+AND
+    Password = @Password;";
+                    cmd.Parameters.Add(new SqlParameter("@UserId", SqlDbType.NVarChar, 15)).Value = loginUser.UserId;
+                    cmd.Parameters.Add(new SqlParameter("@Password", SqlDbType.NVarChar, int.MaxValue)).Value = loginUser.Password;
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+                catch
+                {
+
                     throw;
                 }
             }

@@ -50,8 +50,12 @@
                         </div>
                         <div class="form-group">
                             <div id="passAlert" class="alert1"></div>
-                            <label>パスワード</label>
+                            <label>この進捗管理のパスワード</label>
                             <input type="password" id="password" class="form-control" maxlength="15" />
+                        </div>
+                        <div class="form-group">
+                            <label>パスワード再入力</label>
+                            <input type="password" id="passwordRe" class="form-control" maxlength="15" />
                         </div>
                         <div class="form-group" id="1">
                             <div id="task1Alert" class="alert1"></div>

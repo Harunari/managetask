@@ -13,8 +13,7 @@ namespace ManageProgress.API
             try
             {
                 var cdb = new ConnectDB("Database1");
-                // TODO:ログイン中のユーザのみの進捗データ一覧を取得する
-                var result = cdb.GetAllProgresses();
+                var result = cdb.GetAProgress(userId);
                 if (result.Count == 0)
                 {
                     return "nil";
