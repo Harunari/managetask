@@ -1,11 +1,11 @@
 ﻿using ManageProgress.Library;
 using Newtonsoft.Json;
-using System.Web.Services;
 using System;
+using System.Web.Services;
 
 namespace ManageProgress.API
 {
-    public partial class GetJsonString : System.Web.UI.Page
+    public partial class GetJsonString : APIPage
     {
         [WebMethod]
         public static string GetRegisteredProgresses(string userId)
@@ -24,6 +24,8 @@ namespace ManageProgress.API
             }
             catch (Exception ex)
             {
+                var thisPage = new GetJsonString();
+                thisPage.WriteErrorLog(ex.Message);
                 return "error";
                 
             }
@@ -41,7 +43,8 @@ namespace ManageProgress.API
             }
             catch (Exception ex)
             {
-
+                var thisPage = new GetJsonString();
+                thisPage.WriteErrorLog(ex.Message);
                 return "error";
             }
         }
@@ -58,9 +61,11 @@ namespace ManageProgress.API
             }
             catch (Exception ex)
             {
-
+                var thisPage = new GetJsonString();
+                thisPage.WriteErrorLog(ex.Message);
                 return "error";
             }
         }
+
     }
 }

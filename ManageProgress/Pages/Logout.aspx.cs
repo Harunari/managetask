@@ -1,13 +1,22 @@
-﻿using System;
+﻿using ManageProgress.Library;
+using System;
 
 namespace ManageProgress.Pages
 {
-    public partial class Logout : System.Web.UI.Page
+    public partial class Logout : NormalPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            Session["LoginId"] = null;
-            Response.Redirect("~/Pages/Login.aspx");
+            try
+            {
+                Session["LoginId"] = null;
+                Response.Redirect("~/Pages/Login.aspx");
+            }
+            catch (Exception ex)
+            {
+                WriteErrorLog(ex.Message);
+                return;
+            }
         }
     }
 }

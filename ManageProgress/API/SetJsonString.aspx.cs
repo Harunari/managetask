@@ -7,7 +7,7 @@ using System.Web.Services;
 
 namespace ManageProgress.API
 {
-    public partial class SetJsonString : System.Web.UI.Page
+    public partial class SetJsonString : APIPage
     {
         [WebMethod]
         public static string SetNewProgress(string jsonString)
@@ -43,6 +43,8 @@ namespace ManageProgress.API
             }
             catch (Exception ex)
             {
+                var thisPage = new GetJsonString();
+                thisPage.WriteErrorLog(ex.Message);
                 return "error";
             }
 
@@ -80,6 +82,8 @@ namespace ManageProgress.API
             }
             catch (Exception ex)
             {
+                var thisPage = new GetJsonString();
+                thisPage.WriteErrorLog(ex.Message);
                 return "error";
             }
 
@@ -113,7 +117,8 @@ namespace ManageProgress.API
             }
             catch (Exception ex)
             {
-
+                var thisPage = new GetJsonString();
+                thisPage.WriteErrorLog(ex.Message);
                 return "error";
             }
         }

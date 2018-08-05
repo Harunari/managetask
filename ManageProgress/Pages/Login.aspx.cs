@@ -1,21 +1,16 @@
-﻿using System;
-using ManageProgress.Library;
+﻿using ManageProgress.Library;
 using ManageProgress.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System;
+using System.IO;
 
 namespace ManageProgress.Pages
 {
-    public partial class Login : System.Web.UI.Page
+    public partial class Login : NormalPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
             Session["LoginId"] = null;
         }
-
 
         protected void Login_Click(object sender, EventArgs e)
         {
@@ -43,6 +38,7 @@ namespace ManageProgress.Pages
             }
             catch (Exception ex)
             {
+                WriteErrorLog(ex.Message);
                 loginAlert.Text = "<script>" +
                     "alert('サーバ内部でエラーが発生しました');" +
                     "</script>";

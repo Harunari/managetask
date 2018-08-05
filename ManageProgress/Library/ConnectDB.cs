@@ -68,7 +68,7 @@ SELECT
 FROM
     [dbo].[Progresses] 
 WITH(NOLOCK)
-WHERE 
+WHERE
     UserId = @UserId";
                     cmd.Parameters.Add(new SqlParameter("@UserId", SqlDbType.NVarChar, 15)).Value = userId;
                     using (var reader = cmd.ExecuteReader())
@@ -98,11 +98,13 @@ WHERE
         public List<ParticipantModel> GetParticipants(int progressId)
         {
             List<ParticipantModel> result = new List<ParticipantModel>();
-            using (var conn = new SqlConnection(_connectString))
-            using (var cmd = conn.CreateCommand())
+            try
             {
-                conn.Open();
-                cmd.CommandText = @"
+                using (var conn = new SqlConnection(_connectString))
+                using (var cmd = conn.CreateCommand())
+                {
+                    conn.Open();
+                    cmd.CommandText = @"
 SELECT 
 *
 FROM 
@@ -110,32 +112,40 @@ FROM
 WITH(NOLOCK)
 WHERE
     ProgressId = @ProgressId";
-                cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = progressId;
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
+                    cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = progressId;
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        result.Add(new ParticipantModel
+                        while (reader.Read())
                         {
-                            Id = (int)reader["Id"],
-                            ProgressId = (int)reader["ProgressId"],
-                            ParticipantName = (string)reader["ParticipantName"],
-                            CurrentProgress = (int)reader["CurrentProgress"]
-                        });
+                            result.Add(new ParticipantModel
+                            {
+                                Id = (int)reader["Id"],
+                                ProgressId = (int)reader["ProgressId"],
+                                ParticipantName = (string)reader["ParticipantName"],
+                                CurrentProgress = (int)reader["CurrentProgress"]
+                            });
+                        }
                     }
-                }
-                return result;
+                    return result;
 
+                }
             }
+            catch
+            {
+                throw;
+            }
+
         }
         public List<TaskModel> GetTasks(int progressId)
         {
             List<TaskModel> result = new List<TaskModel>();
-            using (var conn = new SqlConnection(_connectString))
-            using (var cmd = conn.CreateCommand())
+            try
             {
-                conn.Open();
-                cmd.CommandText = @"
+                using (var conn = new SqlConnection(_connectString))
+                using (var cmd = conn.CreateCommand())
+                {
+                    conn.Open();
+                    cmd.CommandText = @"
 SELECT 
 *
 FROM 
@@ -143,28 +153,34 @@ FROM
 WITH(NOLOCK)
 WHERE
     ProgressId = @ProgressId";
-                cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = progressId;
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
+                    cmd.Parameters.Add(new SqlParameter("@ProgressId", SqlDbType.Int)).Value = progressId;
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        result.Add(new TaskModel
+                        while (reader.Read())
                         {
-                            Id = (int)reader["Id"],
-                            ProgressId = (int)reader["ProgressId"],
-                            Task = (string)reader["Task"]
-                        });
+                            result.Add(new TaskModel
+                            {
+                                Id = (int)reader["Id"],
+                                ProgressId = (int)reader["ProgressId"],
+                                Task = (string)reader["Task"]
+                            });
+                        }
                     }
+                    return result;
                 }
-                return result;
             }
+            catch
+            {
+                throw;
+            }
+
         }
         public bool IsCorrectPassword(ParticipantModel participant, string inputPassword)
         {
-            using (var conn = new SqlConnection(_connectString))
-            using (var cmd = conn.CreateCommand())
+            try
             {
-                try
+                using (var conn = new SqlConnection(_connectString))
+                using (var cmd = conn.CreateCommand())
                 {
                     conn.Open();
                     cmd.CommandText = @"
@@ -189,18 +205,19 @@ WHERE
                     }
                     return false;
                 }
-                catch
-                {
-                    throw;
-                }
+            }
+            catch
+            {
+                throw;
             }
         }
         public bool IsExistSameName(ParticipantModel participant)
         {
-            using (var conn = new SqlConnection(_connectString))
-            using (var cmd = conn.CreateCommand())
+
+            try
             {
-                try
+                using (var conn = new SqlConnection(_connectString))
+                using (var cmd = conn.CreateCommand())
                 {
                     conn.Open();
                     cmd.CommandText = @"
@@ -224,15 +241,15 @@ AND
                     }
                     return false;
                 }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-
             }
-        }
+            catch
+            {
 
+                throw;
+            }
+
+            
+        }
         public void SetParticipant(ParticipantModel participant)
         {
             using (var conn = new SqlConnection(_connectString))
@@ -341,7 +358,7 @@ VALUES
                 }
                 catch
                 {
-                    return false;
+                    throw;
                 }
             }
         }

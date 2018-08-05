@@ -1,19 +1,25 @@
 ﻿using ManageProgress.Library;
-using Newtonsoft.Json;
 using System;
-using System.Web.Services;
 
 namespace ManageProgress.Pages
 {
-    public partial class ProgressesList : System.Web.UI.Page
+    public partial class ProgressesList : NormalPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["LoginId"] == null)
+            try
             {
-                Response.Redirect("~/Pages/Login.aspx");
+                if (Session["LoginId"] == null)
+                {
+                    Response.Redirect("~/Pages/Login.aspx");
+                }
+                loginId.InnerText = (string)Session["LoginId"];
             }
-            loginId.InnerText = (string)Session["LoginId"];
+            catch (Exception ex)
+            {
+                WriteErrorLog(ex.Message);
+                return;
+            }
         }
 
     }
