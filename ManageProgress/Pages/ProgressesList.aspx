@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>進捗一覧</title>
     <script src="../Scripts/jquery-3.3.1.js"></script>
     <link href="../Content/bootstrap.css" rel="stylesheet" />
@@ -17,8 +17,36 @@
     </style>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">進捗管理アプリ</a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#Navber" aria-controls="Navber" aria-expanded="false" aria-label="ナビゲーションの切替">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="Navber">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="ProgressesList.aspx">進捗管理一覧 <span class="sr-only">(現位置)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="Logout.aspx">ログアウト</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="Register.aspx">アカウント新規登録</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav justify-content-end">
+                <li>
+                    <div id="loginId" runat="server"></div>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+            </form>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+
     <form id="form1" runat="server">
-        <div id="loginId" runat="server"></div>
         <div class="jumbotron">
             <h1 class="display-4">進捗一覧</h1>
             <p class="lead">
